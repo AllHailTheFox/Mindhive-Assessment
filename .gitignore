@@ -1,5 +1,24 @@
-# Object file
-*.o
+# Ignore Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
-# Ada Library Information
-*.ali
+# Ignore environment files
+.env
+.venv/
+env/
+venv/
+
+# Ignore VSCode/IDE settings
+.vscode/
+.idea/
+
+# Ignore FAISS index backups (optional, keep only what’s needed)
+*.faiss
+
+# Ignore test logs or outputs (optional)
+*.log
+
+# Mac system files
+.DS_Store

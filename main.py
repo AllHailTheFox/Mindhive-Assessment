@@ -110,7 +110,8 @@ def initialize_chatbot():
     #llm = ChatOllama(model="deepseek-r1:1.5b")
     #llm = ChatOllama(model="deepseek-r1:latest")
 
-    db = SQLDatabase.from_uri("sqlite:///zus_outlets.db")
+    db_path = st.secrets["DB_PATH"]
+    db = SQLDatabase.from_uri(f"sqlite:///{db_path}")
     db_chain = SQLDatabaseChain(llm=llm, database=db, verbose=False, return_intermediate_steps=True)
     keywords = get_outlet_keywords(db)
     vectorstore = load_faiss_vectorstore("faiss_zus_products")

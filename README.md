@@ -42,6 +42,27 @@ An intelligent, friendly chatbot that helps users interact with ZUS Coffee's out
 
 ---
 
+## ⚖️ Key Trade-offs & Limitations
+
+- ✅ **Session Memory** is implemented using `ConversationBufferMemory` to allow conversational context across turns.
+  
+  ❗However, due to either:
+  - the LangChain memory object not being properly updated inside the `conversation.predict()`, or  
+  - `Streamlit`'s stateless rerun model interfering with memory persistence,
+
+  **the memory doesn't persist as expected.** Only the visible chat history is shown using `st.session_state`.
+
+- ✅ Vector search via FAISS is fast and flexible  
+  ❗But the product database is **read-only** unless you manually rebuild the vectorstore.
+
+- ✅ Uses simple SQLite for portability  
+  ❗Not ideal for scalability or multi-user deployments
+  
+- ✅ FastAPI backend is modular and usable in local development  
+  ❗**Streamlit Cloud does not support running FastAPI servers**, so the `/outlets` and `/products` REST API endpoints are not active in the public deployment.
+
+---
+
 ## ✨ Example Prompts
 
 > “What time does ZUS SS15 open?”

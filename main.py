@@ -7,8 +7,6 @@ import math
 import logging
 import warnings
 from dotenv import load_dotenv
-from io import StringIO
-
 
 # LangChain Core Modules
 from langchain.prompts import PromptTemplate
@@ -18,8 +16,8 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate as CorePromptTemplate
 
 # LangChain LLM & Model Integrations
-from langchain_community.chat_models import ChatOllama
-#from langchain.chat_models import ChatOpenAI
+#from langchain_community.chat_models import ChatOllama
+from langchain.chat_models import ChatOpenAI
 
 
 # LangChain SQL & Database Tools
@@ -105,18 +103,19 @@ def safe_calculate(query: str) -> str:
 # === Initialization ===
 @st.cache_resource
 def initialize_chatbot():
-    load_dotenv()
+    openai_key = st.secrets["OPENAI_API_KEY"]
+    #load_dotenv(dotenv_path=r".env")
     # Make sure your API key is set
     #if "OPENAI_API_KEY" not in os.environ:
         #raise EnvironmentError("Missing OPENAI_API_KEY in environment variables.")
-    #llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.3)
-    llm = ChatOllama(model="llama3.2:3b",temperature=0.3) #This worked the best in this usecase i used 0.3 so it doesn't hallucinate badly
+    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.3, openai_api_key=openai_key)
+    #llm = ChatOllama(model="llama3.2:3b",temperature=0.3) #This worked the best in this usecase i used 0.3 so it doesn't hallucinate badly
     #llm = ChatOllama(model="deepseek-r1:1.5b")
     #llm = ChatOllama(model="deepseek-r1:latest")
 
-    #db_path = st.secrets["DB_PATH"]
-    #db = SQLDatabase.from_uri(f"sqlite:///{db_path}")
-    db = SQLDatabase.from_uri(f"sqlite:///zus_outlets.db")
+    db_path = st.secrets["DB_PATH"]
+    db = SQLDatabase.from_uri(f"sqlite:///{db_path}")
+    #db = SQLDatabase.from_uri(f"sqlite:///zus_outlets.db")
     db_chain = SQLDatabaseChain(llm=llm, database=db, verbose=False, return_intermediate_steps=True)
     keywords = get_outlet_keywords(db)
     vectorstore = load_faiss_vectorstore("faiss_zus_products")

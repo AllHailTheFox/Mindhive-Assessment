@@ -105,7 +105,7 @@ def safe_calculate(query: str) -> str:
 # === Initialization ===
 @st.cache_resource
 def initialize_chatbot():
-    load_dotenv(dotenv_path=r"C:\Users\Ervyn\Downloads\Mindhive\FOR GITHUB\.env")
+    load_dotenv()
     # Make sure your API key is set
     #if "OPENAI_API_KEY" not in os.environ:
         #raise EnvironmentError("Missing OPENAI_API_KEY in environment variables.")

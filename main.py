@@ -7,6 +7,8 @@ import math
 import logging
 import warnings
 from dotenv import load_dotenv
+from io import StringIO
+
 
 # LangChain Core Modules
 from langchain.prompts import PromptTemplate
@@ -16,8 +18,8 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate as CorePromptTemplate
 
 # LangChain LLM & Model Integrations
-#from langchain_community.chat_models import ChatOllama
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOllama
+#from langchain.chat_models import ChatOpenAI
 
 
 # LangChain SQL & Database Tools
@@ -55,6 +57,7 @@ def get_outlet_keywords(db) -> list:
         return set()
 
 def load_faiss_vectorstore(folder_path: str) -> FAISS:
+    logging.info("Attempting to load FAISS vectorstore from: %s", folder_path)
     try:
         embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
         vectorstore = FAISS.load_local(folder_path, embeddings=embedding_model, allow_dangerous_deserialization=True)
@@ -83,6 +86,7 @@ def is_math_query(text: str) -> bool:
     return any(op in text for op in ["+", "-", "*", "/", "^", "square root", "cube root", "power", "raised to", "mod", "modulus", "remainder", "multiply", "divide", "quotient", "add", "sum", "plus", "subtract", "minus", "difference", "average", "mean", "median", "mode", "percentage", "percent of", "calculate", "how much is", "what is", "total of"])
 
 def safe_calculate(query: str) -> str:
+    logging.info("Performing calculation for query: %s", query)
     try:
         query = query.lower().replace("square root of", "math.sqrt").replace("^", "**")
         expressions = re.findall(r"(math\.sqrt\(\d+\)|\d+(\.\d+)?\s*[\+\-\*/]\s*\d+(\.\d+)?)", query)
@@ -101,17 +105,18 @@ def safe_calculate(query: str) -> str:
 # === Initialization ===
 @st.cache_resource
 def initialize_chatbot():
-    load_dotenv(dotenv_path=".env")
+    load_dotenv(dotenv_path=r"C:\Users\Ervyn\Downloads\Mindhive\FOR GITHUB\.env")
     # Make sure your API key is set
-    if "OPENAI_API_KEY" not in os.environ:
-        raise EnvironmentError("Missing OPENAI_API_KEY in environment variables.")
-    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.3)
-    #llm = ChatOllama(model="llama3.2:3b",temperature=0.3) #This worked the best in this usecase i used 0.3 so it doesn't hallucinate badly
+    #if "OPENAI_API_KEY" not in os.environ:
+        #raise EnvironmentError("Missing OPENAI_API_KEY in environment variables.")
+    #llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.3)
+    llm = ChatOllama(model="llama3.2:3b",temperature=0.3) #This worked the best in this usecase i used 0.3 so it doesn't hallucinate badly
     #llm = ChatOllama(model="deepseek-r1:1.5b")
     #llm = ChatOllama(model="deepseek-r1:latest")
 
-    db_path = st.secrets["DB_PATH"]
-    db = SQLDatabase.from_uri(f"sqlite:///{db_path}")
+    #db_path = st.secrets["DB_PATH"]
+    #db = SQLDatabase.from_uri(f"sqlite:///{db_path}")
+    db = SQLDatabase.from_uri(f"sqlite:///zus_outlets.db")
     db_chain = SQLDatabaseChain(llm=llm, database=db, verbose=False, return_intermediate_steps=True)
     keywords = get_outlet_keywords(db)
     vectorstore = load_faiss_vectorstore("faiss_zus_products")
@@ -153,28 +158,6 @@ if "session_initialized" not in st.session_state:
     st.session_state.session_initialized = True
     st.session_state.info_logs = []  # Clear previous logs
 
-class StreamlitInfoLogHandler(logging.Handler):
-    def emit(self, record):
-        if record.levelno == logging.INFO:  # Only show INFO level
-            msg = self.format(record)
-            if "info_logs" not in st.session_state:
-                st.session_state["info_logs"] = []
-            st.session_state["info_logs"].append(msg)
-            st.session_state["info_logs"] = st.session_state["info_logs"][-100:]  # Keep last 100 logs
-
-            # Update the Streamlit UI
-            with info_log_placeholder:
-                st.markdown("### ℹ️ Info Logs")
-                st.code("\n".join(st.session_state["info_logs"]), language="text")
-
-# Attach handler
-if not any(isinstance(h, StreamlitInfoLogHandler) for h in logging.getLogger().handlers):
-    info_handler = StreamlitInfoLogHandler()
-    info_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s", datefmt="%H:%M:%S"))
-    logging.getLogger().addHandler(info_handler)
-
-
-
 
 
 st.title("☕ ZUS Coffee Chatbot")
@@ -192,28 +175,53 @@ if st.session_state.chat_history:
         )
 
         for role, msg in st.session_state.chat_history:
-            if role == "user":
-                st.markdown(f"<div style='margin-bottom: 10px'><strong>You:</strong> {msg}</div>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<div style='margin-bottom: 10px'><strong>Bot:</strong> {msg}</div>", unsafe_allow_html=True)
-
+                if role == "user":
+                    st.markdown(f"<div style='margin-bottom: 10px'><strong>You:</strong> {msg}</div>", unsafe_allow_html=True)
+                elif role == "assistant":
+                    st.markdown(f"<div style='margin-bottom: 10px'><strong>Bot:</strong> {msg}</div>", unsafe_allow_html=True)
+                elif role == "log":
+                    st.markdown(f"<div style='margin-bottom: 10px'><strong>ℹ️ Logs:</strong></div>", unsafe_allow_html=True)
+                    st.code(msg, language="text")
         st.markdown("</div>", unsafe_allow_html=True)
 
-        
+    
+# Setup prompt log buffer
+class SessionLogBuffer(logging.Handler):
+    def __init__(self):
+        super().__init__()
+        self.buffer = StringIO()
+        self.setFormatter(logging.Formatter("%(asctime)s - %(message)s", datefmt="%H:%M:%S"))
+
+    def emit(self, record):
+        msg = self.format(record)
+        self.buffer.write(msg + "\n")
+
+    def get_logs(self):
+        return self.buffer.getvalue().strip()
+
+
 user_input = st.chat_input("Ask about outlets, drinks, prices, or math!")
 
 if user_input:
     st.chat_message("user").markdown(user_input)
+    
+    # Setup per-user-prompt log capturing
+    log_capture = SessionLogBuffer()
+    logging.getLogger().addHandler(log_capture)
 
     try:
         if is_math_query(user_input):
+            logging.info("Identified calculator query")
             result = safe_calculate(user_input)
 
         elif is_outlet_query(user_input):
+            logging.info("Detected outlet-related query")
             missing = detect_missing_info(user_input, last_outlet["name"] or "", keywords)
             if missing == "location":
+                logging.info("Missing location keyword in user input")
                 result = "Could you please specify the location or outlet name?"
             else:
+                logging.info("Querying database for outlet info")
                 outlet_match = re.search(r"\b(ss ?\d+|usj ?\d+|mont ?kiara|klcc|bangsar|subang|kuala ?lumpur)\b", user_input.lower())
                 if outlet_match:
                     last_outlet["name"] = outlet_match.group(0)
@@ -240,9 +248,12 @@ if user_input:
                     result = response.get("result", "").strip() or "Sorry, I couldn't find the answer."
 
         elif is_product_query(user_input):
+            logging.info("Detected product-related query")
             if not vectorstore:
+                logging.warning("FAISS vectorstore not available")
                 result = "Bot: Sorry, product information is not available."
             else:
+                logging.info("Querying FAISS vectorstore")
                 retriever = vectorstore.as_retriever()
                 docs = retriever.get_relevant_documents(user_input)
                 if not docs:
@@ -260,6 +271,22 @@ if user_input:
         logging.error("Error occurred: %s", e)
         result = "Sorry, something went wrong."
 
+    finally:
+        # Stop capturing logs after the prompt finishes
+        logging.getLogger().removeHandler(log_capture)
+
+    logs = log_capture.get_logs()
+    
+
     st.chat_message("assistant").markdown(result)
+    # Optionally display logs under the result
+    if logs:
+        with st.chat_message("assistant"):
+            st.markdown("**ℹ️ Logs**")
+            st.code(logs, language="text")
+
     st.session_state.chat_history.append(("user", user_input))
     st.session_state.chat_history.append(("assistant", result))
+
+    if logs:
+        st.session_state.chat_history.append(("log", logs))

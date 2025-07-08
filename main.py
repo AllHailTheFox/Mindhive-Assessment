@@ -82,7 +82,7 @@ def detect_missing_info(user_input: str, history: str, keywords: set) -> str:
     return ""
 
 def is_math_query(text: str) -> bool:
-    return any(op in text for op in ["+", "-", "*", "/", "^", "square root", "cube root", "power", "raised to", "mod", "modulus", "remainder", "multiply", "divide", "quotient", "add", "sum", "plus", "subtract", "minus", "difference", "average", "mean", "median", "mode", "percentage", "percent of", "calculate", "how much is", "what is", "total of"])
+    return any(op in text for op in ["+", "-", "*", "/", "^", "square root", "cube root", "power", "raised to", "mod", "modulus", "remainder", "multiply", "divide", "quotient", "sum", "plus", "subtract", "minus", "difference", "average", "mean", "median", "mode", "percentage", "percent of", "calculate", "how much is", "what is", "total of"])
 
 def safe_calculate(query: str) -> str:
     logging.info("Performing calculation for query: %s", query)

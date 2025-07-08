@@ -74,6 +74,25 @@ An intelligent, friendly chatbot that helps users interact with ZUS Coffee's out
 > “How much is 12.5% of RM37?”
 
 ---
+#### ✅ Flow Diagram / Screenshot
+
+You can add a flow diagram (if you're able to generate one), or include screenshots of your chatbot in action.
+
+Here's how you might write it in markdown:
+
+
+## 🔄 Chatbot Architecture & Flow
+
+📤 User Input (via Streamlit Chat UI)  
+  ⬇  
+📌 Router Logic  
+  ├── 🏢 Outlet Query → 🧠 LangChain Text2SQL → 🗃 SQLite DB  
+  ├── 🧃 Product Query → 🔍 FAISS Vector Search → 📦 Product Vectorstore  
+  ├── ➗ Math Query → 📐 Safe Calculator Logic  
+  └── 💬 General Chat → 🧠 LangChain ConversationChain → 🌐 OpenAI GPT-3.5 API
+
+
+---
 ## 📘 API Specification (Conceptual)
 
 Although the deployed Streamlit app does not expose public APIs (due to Streamlit Cloud limitations), the chatbot backend is fully designed to support API access using FastAPI.
@@ -103,9 +122,7 @@ The FastAPI backend is **fully working and available locally**, provided in a th
 ---
 
 
-## ⚙️ Local Development (Optional)
 
-While not required, developers can run this app locally if desired.
 
 ### Requirements
 

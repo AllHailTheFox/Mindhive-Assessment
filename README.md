@@ -72,7 +72,15 @@ An intelligent, friendly chatbot that helps users interact with ZUS Coffee's out
 > “What drinks contain matcha?”
 
 > “How much is 12.5% of RM37?”
+---
+## 🛡️ Error Handling & Security Strategy
 
+- Input validation for calculator queries using regex + `eval` in a restricted context
+- SQL Database chain wraps queries with error logging and fallback messages
+- For missing slot inputs (e.g., no city/state), chatbot asks follow-up questions
+- All major query types (SQL, vector, calculator) are wrapped in try/except
+- Malicious inputs (e.g., SQL injection) are not executed — they return a polite error
+  
 ---
 #### ✅ Flow Diagram / Screenshot
 

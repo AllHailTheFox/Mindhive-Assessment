@@ -1,7 +1,7 @@
 # Mindhive-Assessment
 This is my chatbot for Mindhive assessment test
 
-# ☕ ZUS Coffee Chatbot
+# ZUS Coffee Chatbot
 
 An intelligent, friendly chatbot that helps users interact with ZUS Coffee's outlet and product information — powered by **LangChain**, **FAISS**, **OpenAI**, and **Streamlit**.
 

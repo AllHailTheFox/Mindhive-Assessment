@@ -74,6 +74,34 @@ An intelligent, friendly chatbot that helps users interact with ZUS Coffee's out
 > “How much is 12.5% of RM37?”
 
 ---
+## 📘 API Specification (Conceptual)
+
+Although the deployed Streamlit app does not expose public APIs (due to Streamlit Cloud limitations), the chatbot backend is fully designed to support API access using FastAPI.
+
+The FastAPI backend is **fully working and available locally**, provided in a this GitHub repository:
+
+> ✅ **See**: [`Locally with FastAPI`](https://github.com/your-username/Locally-with-FastAPI)  
+> 🚀 To test locally, run: `uvicorn zus_api:app --reload`
+
+### Available Endpoints
+
+#### `/outlets` (GET)
+- **Description**: Query ZUS Coffee outlets by city or state.
+- **Query Parameters**:
+  - `city`: Optional string (e.g., `Kuala Lumpur`)
+  - `state`: Optional string (e.g., `Selangor`)
+- **Returns**: JSON list of matching outlets with full metadata.
+
+#### `/products` (POST)
+- **Description**: Query product-related information using vector search (RAG).
+- **Request Body**:
+  ```json
+  {
+    "query": "Do you sell matcha drinks?"
+  }
+
+---
+
 
 ## ⚙️ Local Development (Optional)
 

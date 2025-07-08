@@ -36,7 +36,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 last_outlet = {"name": None}
 
-# === Helper Functions (Unchanged) ===
+# === Helper Functions ===
 def is_outlet_query(user_input: str) -> bool:
     return any(kw in user_input.lower() for kw in ["outlet", "location", "shop", "address", "branch", "open", "opening", "close", "closing", "time", "city", "state", "days", "phone", "contact", "number"])
 
@@ -276,7 +276,6 @@ if user_input:
 
     logs = log_capture.get_logs()
     
-
     st.chat_message("assistant").markdown(result)
     # Optionally display logs under the result
     if logs:

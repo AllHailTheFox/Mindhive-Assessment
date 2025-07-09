@@ -222,7 +222,7 @@ if user_input:
                 result = "Could you please specify the location or outlet name?"
             else:
                 logging.info("Querying database for outlet info")
-                outlet_match = re.search(r"\b(ss ?\d+|usj ?\d+|mont ?kiara|klcc|bangsar|subang|kuala ?lumpur)\b", user_input.lower())
+                matched_keyword = next((kw for kw in keywords if kw in user_input.lower()), None)
                 if outlet_match:
                     last_outlet["name"] = outlet_match.group(0)
                 if last_outlet["name"] and last_outlet["name"] not in user_input.lower():

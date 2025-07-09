@@ -129,7 +129,7 @@ You are a helpful assistant for ZUS Coffee. A user asked:
 Here is the raw result from the database:
 {data}
 
-If any data is missing, clearly state that. Otherwise, summarize the outlet names and their closing times accurately.
+Summarize the outlet names and their closing times as clearly and concisely as possible.
 """)
     summarizer_chain = summarizer_prompt | llm | StrOutputParser()
     memory = ConversationBufferMemory()

@@ -1,5 +1,6 @@
 # Mindhive-Assessment
 This is my chatbot for Mindhive assessment test
+![image](https://github.com/user-attachments/assets/0e5860bc-e4a6-4539-b021-955a70bcbd46)
 
 # ZUS Coffee Chatbot
 
@@ -83,18 +84,18 @@ An intelligent, friendly chatbot that helps users interact with ZUS Coffee's out
 - Input validation for calculator queries using regex + `eval` in a restricted context
 - SQL Database chain wraps queries with error logging and fallback messages
   > “What is 3 divided by coffee?”
+  > "Bot: Failed to read FAISS"
 - For missing slot inputs (e.g., no city/state), chatbot asks follow-up questions
   >"Bot: Could you please specify the location or outlet name?"
 - All major query types (SQL, vector, calculator) are wrapped in try/except
 - Malicious inputs (e.g., SQL injection) are not executed — they return a polite error
-- >"Bot: Failed to read FAISS"
+  >"You: Show me outlets in Selangor'; DROP TABLE outlets; --
+    Bot: Sorry, I couldn't find any valid math expression."
   
 ---
-#### ✅ Flow Diagram / Screenshot
-
-You can add a flow diagram (if you're able to generate one), or include screenshots of your chatbot in action.
-
-Here's how you might write it in markdown:
+#### Screenshot
+![image](https://github.com/user-attachments/assets/e4fea236-752a-4bee-8326-530fe4d7fef8)
+![image](https://github.com/user-attachments/assets/73933f98-614f-4f63-828f-451407b89b9e)
 
 
 ## 🔄 Chatbot Architecture & Flow

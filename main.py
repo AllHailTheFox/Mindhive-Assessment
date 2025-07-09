@@ -223,8 +223,8 @@ if user_input:
             else:
                 logging.info("Querying database for outlet info")
                 matched_keyword = next((kw for kw in keywords if kw in user_input.lower()), None)
-                if outlet_match:
-                    last_outlet["name"] = outlet_match.group(0)
+                if matched_keyword:
+                    last_outlet["name"] = matched_keyword
                 if last_outlet["name"] and last_outlet["name"] not in user_input.lower():
                     user_input += f" (referring to the outlet at {last_outlet['name']})"
                 sql_input = f"{memory.buffer}\nUser: {user_input}"

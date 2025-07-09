@@ -65,21 +65,25 @@ An intelligent, friendly chatbot that helps users interact with ZUS Coffee's out
 
 ## ✨ Example Prompts
 
-> “What time does ZUS SS15 open?”
+> “What time does Kuala Lumpur outlets open?” Issue
 
-> “List all outlets in Kuala Lumpur.”
+> “List all outlets in Kuala Lumpur.” Issue
 
-> “What drinks contain matcha?”
+> “Do you have any BPA free product?”
 
 > “How much is 12.5% of RM37?”
+
 ---
 ## 🛡️ Error Handling & Security Strategy
 
 - Input validation for calculator queries using regex + `eval` in a restricted context
 - SQL Database chain wraps queries with error logging and fallback messages
+  > “What is 3 divided by coffee?”
 - For missing slot inputs (e.g., no city/state), chatbot asks follow-up questions
+  >"Bot: Could you please specify the location or outlet name?"
 - All major query types (SQL, vector, calculator) are wrapped in try/except
 - Malicious inputs (e.g., SQL injection) are not executed — they return a polite error
+- >"Bot: Failed to read FAISS"
   
 ---
 #### ✅ Flow Diagram / Screenshot

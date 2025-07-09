@@ -61,9 +61,9 @@ An intelligent, friendly chatbot that helps users interact with ZUS Coffee's out
 - ✅ FastAPI backend is modular and usable in local development  
   ❗**Streamlit Cloud does not support running FastAPI servers**, so the `/outlets` and `/products` REST API endpoints are not active in the public deployment.
 
-- ✅ SQL + summarizer works for outlet data extraction
-  ❗However, some LLM hallucinations still occur, especially when summarizing SQL results.
-    **Due to limited time for thorough testing and prompt tuning, some outputs may include fabricated details)** (e.g., closing times or outlet names not in the DB).
+- ✅ SQL + summarizer works for outlet data extraction  
+  ❗However, some LLM hallucinations still occur, especially when summarizing SQL results.  
+  **Due to limited time for thorough testing and prompt tuning, some outputs may include fabricated details** (e.g., closing times or outlet names not in the DB).
 
 ---
 

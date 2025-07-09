@@ -122,14 +122,17 @@ def initialize_chatbot():
     vectorstore = load_faiss_vectorstore("faiss_zus_products")
 
     summarizer_prompt = CorePromptTemplate.from_template("""
-You are a helpful assistant for ZUS Coffee. A user asked:
+You are a helpful assistant for ZUS Coffee.
 
+The user asked:
 {question}
 
-Here is the raw result from the database:
+The following data was retrieved directly from the ZUS Coffee SQL database:
 {data}
 
-Summarize the outlet names and their closing times as clearly and concisely as possible.
+Only use this data — do not make up or assume any details.
+
+Summarize the outlet names along with any closing times or phone numbers **exactly as shown** in the data. If a field is not shown, do not mention it at all.
 """)
     summarizer_chain = summarizer_prompt | llm | StrOutputParser()
     memory = ConversationBufferMemory()

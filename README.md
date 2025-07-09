@@ -116,7 +116,7 @@ Although the deployed Streamlit app does not expose public APIs (due to Streamli
 
 The FastAPI backend is **fully working and available locally**, provided in a this GitHub repository:
 
-> ✅ **See**: [`Locally with FastAPI`](https://github.com/your-username/Locally-with-FastAPI)  
+> ✅ **See**: [`Locally with FastAPI`]([https://github.com/your-username/Locally-with-FastAPI](https://github.com/AllHailTheFox/Mindhive-Assessment/blob/main/FastAPI%20local%20Version.zip))  
 > 🚀 To test locally, run: `uvicorn zus_api:app --reload`
 
 ### Available Endpoints
